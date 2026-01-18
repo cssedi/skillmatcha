@@ -35,7 +35,7 @@ jobs:
       - name: Apply shared components
         run: |
           set -e
-          SHARED_DIR="infra/live/${{ github.event.inputs.environment }}/shared"
+          SHARED_DIR="Infra/live/${{ github.event.inputs.environment }}/shared"
 
           if [ -d "$SHARED_DIR" ]; then
             for comp in "$SHARED_DIR"/*; do
@@ -43,7 +43,6 @@ jobs:
                 echo "=== Applying shared component: $(basename "$comp") ==="
                 cd "$comp"
                 terraform init -input=false
-                # terraform.tfvars in this folder will be auto-loaded
                 terraform apply -input=false -auto-approve
                 cd - > /dev/null
               fi
@@ -52,12 +51,10 @@ jobs:
             echo "No shared directory found at $SHARED_DIR, skipping shared components."
           fi
 
-      # 2) Apply the selected service root
       - name: Apply service
         run: |
           echo "=== Applying service: ${{ github.event.inputs.service }} ==="
-          SERVICE_DIR="infra/live/${{ github.event.inputs.environment }}/${{ github.event.inputs.service }}"
+          SERVICE_DIR="Infra/live/${{ github.event.inputs.environment }}/${{ github.event.inputs.service }}"
           cd "$SERVICE_DIR"
           terraform init -input=false
-          # terraform.tfvars in this folder will be auto-loaded
           terraform apply -input=false -auto-approve
