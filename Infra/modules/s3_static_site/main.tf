@@ -1,7 +1,5 @@
-data "aws_region" "current" {}
-
 resource "aws_s3_bucket" "this" {
-  bucket = var.bucket_name
+  bucket = var.s3_bucket_name
 
   tags = var.tags
 }
@@ -45,5 +43,6 @@ resource "aws_s3_bucket_policy" "public" {
 }
 
 locals {
-  s3_website_zone_id = data.aws_region.current.hosted_zone_id
+  # This deployment targets eu-central-1 only; use the S3 website hosted-zone ID for that region.
+  s3_website_zone_id = "Z21DNDUVLTQW6Q"
 }

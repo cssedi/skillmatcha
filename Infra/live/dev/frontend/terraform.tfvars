@@ -1,1 +1,2 @@
-s3_bucket_name = "skill-matcha-frontend-dev"
+s3_bucket_name = "skillmatcha-frontend-s3"
+aws_region = "eu-central-1"

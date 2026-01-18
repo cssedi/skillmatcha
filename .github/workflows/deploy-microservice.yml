@@ -34,17 +34,20 @@ jobs:
       # 1) Apply ALL shared roots for the environment
       - name: Apply shared components
         run: |
-          set -e
+          set -euo pipefail
           SHARED_DIR="Infra/live/${{ github.event.inputs.environment }}/shared"
 
           if [ -d "$SHARED_DIR" ]; then
             for comp in "$SHARED_DIR"/*; do
               if [ -d "$comp" ]; then
                 echo "=== Applying shared component: $(basename "$comp") ==="
-                cd "$comp"
-                terraform init -input=false
-                terraform apply -input=false -auto-approve
-                cd - > /dev/null
+                TFVARS=""
+                if [ -f "$comp/terraform.tfvars" ]; then
+                  TFVARS="-var-file=$comp/terraform.tfvars"
+                fi
+                terraform -chdir="$comp" init -input=false
+                terraform -chdir="$comp" plan -input=false $TFVARS -out=tfplan
+                terraform -chdir="$comp" apply -input=false -auto-approve tfplan
               fi
             done
           else
@@ -53,8 +56,17 @@ jobs:
 
       - name: Apply service
         run: |
+          set -euo pipefail
           echo "=== Applying service: ${{ github.event.inputs.service }} ==="
           SERVICE_DIR="Infra/live/${{ github.event.inputs.environment }}/${{ github.event.inputs.service }}"
-          cd "$SERVICE_DIR"
-          terraform init -input=false
-          terraform apply -input=false -auto-approve
+          if [ ! -d "$SERVICE_DIR" ]; then
+            echo "Service directory $SERVICE_DIR not found"
+            exit 1
+          fi
+          TFVARS=""
+          if [ -f "$SERVICE_DIR/terraform.tfvars" ]; then
+            TFVARS="-var-file=$SERVICE_DIR/terraform.tfvars"
+          fi
+          terraform -chdir="$SERVICE_DIR" init -input=false
+          terraform -chdir="$SERVICE_DIR" plan -input=false $TFVARS -out=tfplan
+          terraform -chdir="$SERVICE_DIR" apply -input=false -auto-approve tfplan
