@@ -5,9 +5,26 @@ import {
   writeResponseToNodeResponse,
 } from '@angular/ssr/node';
 import express from 'express';
-import { join } from 'node:path';
+import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const browserDistFolder = join(import.meta.dirname, '../browser');
+let __filename: string;
+let __dirname: string;
+
+try {
+  if (typeof import.meta !== 'undefined' && (import.meta as any).url) {
+    __filename = fileURLToPath((import.meta as any).url);
+    __dirname = dirname(__filename);
+  } else {
+    __filename = process.cwd();
+    __dirname = process.cwd();
+  }
+} catch {
+  __filename = process.cwd();
+  __dirname = process.cwd();
+}
+
+const browserDistFolder = join(__dirname, '../browser');
 
 const app = express();
 const angularApp = new AngularNodeAppEngine();
@@ -51,7 +68,11 @@ app.use((req, res, next) => {
  * Start the server if this module is the main entry point, or it is ran via PM2.
  * The server listens on the port defined by the `PORT` environment variable, or defaults to 4000.
  */
-if (isMainModule(import.meta.url) || process.env['pm_id']) {
+const _isMain = (typeof import.meta !== 'undefined' && (import.meta as any).url)
+  ? isMainModule((import.meta as any).url)
+  : false;
+
+if (_isMain || process.env['pm_id']) {
   const port = process.env['PORT'] || 4000;
   app.listen(port, (error) => {
     if (error) {

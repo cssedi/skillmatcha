@@ -1,0 +1,54 @@
+name: Terraform Microservice Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment (dev, prod, etc.)"
+        required: true
+        default: "dev"
+      service:
+        description: "Service/root folder under live/<env> (e.g. frontend, service-a)"
+        required: true
+        default: "frontend"
+      tfvars_file:
+        description: "tfvars file name in the root (e.g. dev.tfvars, prod.tfvars)"
+        required: true
+        default: "dev.tfvars"
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    env:
+      AWS_ACCESS_KEY_ID:     ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION:    ${{ secrets.AWS_DEFAULT_REGION }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.9.0
+
+      - name: Select working directory
+        id: vars
+        run: |
+          echo "workdir=infra/live/${{ github.event.inputs.environment }}/${{ github.event.inputs.service }}" >> $GITHUB_OUTPUT
+          echo "tfvars=${{ github.event.inputs.tfvars_file }}" >> $GITHUB_OUTPUT
+
+      - name: Terraform Init
+        working-directory: ${{ steps.vars.outputs.workdir }}
+        run: terraform init -input=false
+
+      - name: Terraform Plan
+        working-directory: ${{ steps.vars.outputs.workdir }}
+        run: terraform plan -input=false -var-file="${{ steps.vars.outputs.tfvars }}"
+
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main'
+        working-directory: ${{ steps.vars.outputs.workdir }}
+        run: terraform apply -input=false -auto-approve -var-file="${{ steps.vars.outputs.tfvars }}"
