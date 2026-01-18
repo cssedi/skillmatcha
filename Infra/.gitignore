@@ -13,9 +13,6 @@ terraform.tfstate.d/
 crash.log
 crash.*.log
 
-# Sensitive variable files
-*.tfvars
-*.tfvars.json
 
 # Plan output files
 *.tfplan
@@ -25,6 +22,9 @@ override.tf
 override.tf.json
 *_override.tf
 *_override.tf.json
+
+# Ignore gitignore file in modules
+**/.gitignore
 
 # Optional: ignore Terraform CLI config if present locally
 .terraformrc
