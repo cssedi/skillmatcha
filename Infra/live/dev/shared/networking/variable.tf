@@ -6,5 +6,5 @@ variable "domain_name" {
 variable "aws_region" {
   description = "The AWS region to deploy resources into"
   type        = string
-  default     = "us-central-1"
+  default     = "eu-central-1"
 }
