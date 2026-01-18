@@ -3,7 +3,7 @@ terraform {
     bucket       = "skillmatcha-terraform-state"
     key          = "live/dev/shared-networking.tfstate"
     region       = "eu-central-1"
-    use_lockfile = "terraform-state-locks"
+    dynamodb_table = "terraform-state-locks"
     encrypt      = true
   }
 }
