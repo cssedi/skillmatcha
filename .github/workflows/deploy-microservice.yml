@@ -43,7 +43,7 @@ jobs:
                 echo "=== Applying shared component: $(basename "$comp") ==="
                 TFVARS=""
                 if [ -f "$comp/terraform.tfvars" ]; then
-                  TFVARS="-var-file=$comp/terraform.tfvars"
+                  TFVARS="-var-file=terraform.tfvars"
                 fi
                 terraform -chdir="$comp" init -input=false
                 terraform -chdir="$comp" plan -input=false $TFVARS -out=tfplan
@@ -65,7 +65,7 @@ jobs:
           fi
           TFVARS=""
           if [ -f "$SERVICE_DIR/terraform.tfvars" ]; then
-            TFVARS="-var-file=$SERVICE_DIR/terraform.tfvars"
+            TFVARS="-var-file=terraform.tfvars"
           fi
           terraform -chdir="$SERVICE_DIR" init -input=false
           terraform -chdir="$SERVICE_DIR" plan -input=false $TFVARS -out=tfplan
