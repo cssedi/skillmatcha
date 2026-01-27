@@ -1,0 +1,103 @@
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 2rem;
+  background: #fff;
+}
+
+.login-container {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  border: 1px solid #000;
+  width: 100%;
+  max-width: 350px;
+}
+
+.login-container h2 {
+  margin: 0 0 1.5rem 0;
+  text-align: center;
+  color: #000;
+  font-size: 1.5rem;
+}
+
+.login-container form div {
+  margin-bottom: 1rem;
+}
+
+.login-container label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #000;
+  font-weight: 500;
+}
+
+.login-container input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #000;
+  border-radius: 5px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  background: #fff;
+  color: #000;
+}
+
+.login-container input:focus {
+  outline: none;
+  border-color: #000;
+}
+
+.login-container button[type="submit"] {
+  width: 100%;
+  padding: 0.75rem;
+  background: #000;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+
+.login-container button[type="submit"]:hover {
+  background: #333;
+}
+
+.error {
+  color: #000;
+  font-size: 0.875rem;
+  margin-top: 1rem;
+  text-align: center;
+  font-weight: 600;
+}
+
+.switch-form {
+  text-align: center;
+  margin-top: 1.5rem;
+  color: #000;
+  font-size: 0.9rem;
+}
+
+.switch-form a {
+  color: #000;
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.back-link {
+  display: block;
+  text-align: center;
+  margin-top: 1rem;
+  color: #000;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
